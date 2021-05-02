@@ -28,7 +28,7 @@ class Parser:
     links = {}
     json_result = ""
 
-    def __init__(self, form_name: str, *args, **kwargs):
+    def __init__(self, form_name, *args, **kwargs):
         self.url_params["value"] = form_name
         self.form_name = self.url_params["value"]
         self.url = self._build_url()
@@ -91,7 +91,7 @@ class Parser:
         else:
             print(f"[!] There was no PDFs within given range")
 
-    def _build_form_data(self, title: str, years: list[int]):
+    def _build_form_data(self, title, years):
         return {
             "form_number": self.form_name,
             "form_title": title,
@@ -103,7 +103,7 @@ class Parser:
         page = requests.get(self.url)
         return BeautifulSoup(page.content, 'html.parser')
     
-    def _count_pages(self, html_dict: BeautifulSoup):
+    def _count_pages(self, html_dict):
         pagination_bottom = html_dict.find_all(True, class_="paginationBottom")
         '''
         We count all 'a' tags from paginationBottom 'div'.

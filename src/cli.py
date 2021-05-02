@@ -16,8 +16,8 @@ args_pattern = re.compile(
 )
 class CLI:
     @staticmethod
-    def parse(arg_line: str):
-        args: dict[str, str] = {}
+    def parse(arg_line):
+        args = {}
         if match_object := args_pattern.match(arg_line):
             args = {k: v for k, v in match_object.groupdict().items()
                     if v is not None}
