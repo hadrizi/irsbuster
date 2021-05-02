@@ -91,7 +91,7 @@ class Parser:
         else:
             print(f"[!] There was no PDFs within given range")
 
-    def _build_form_data(self, title: str, years: list[int]) -> dict:
+    def _build_form_data(self, title: str, years: list[int]):
         return {
             "form_number": self.form_name,
             "form_title": title,
@@ -99,11 +99,11 @@ class Parser:
             "max_year": max(years)
         }
 
-    def _get_page_dict(self) -> BeautifulSoup:
+    def _get_page_dict(self):
         page = requests.get(self.url)
         return BeautifulSoup(page.content, 'html.parser')
     
-    def _count_pages(self, html_dict: BeautifulSoup) -> int:
+    def _count_pages(self, html_dict: BeautifulSoup):
         pagination_bottom = html_dict.find_all(True, class_="paginationBottom")
         '''
         We count all 'a' tags from paginationBottom 'div'.
@@ -130,7 +130,7 @@ class Parser:
             count += 1
         return count
 
-    def _build_url(self) -> str:
+    def _build_url(self):
         if not self.url_params["value"]:
             raise KeyError("Desired form name is not provided")
 
