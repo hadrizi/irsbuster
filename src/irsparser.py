@@ -74,6 +74,11 @@ class Parser:
         print(f"[~] Downloading PDFs for form {self.form_name} within range {min(years)}-{max(years)} to data/{self.form_name}/")
 
         try:
+            os.mkdir(f"data/")
+        except FileExistsError:
+            pass
+
+        try:
             os.mkdir(f"data/{self.form_name}/")
         except FileExistsError:
             pass
