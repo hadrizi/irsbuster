@@ -1,5 +1,6 @@
-import os
 import sys
+
+from pathlib import Path
 
 from src.cli import CLI
 from src.irsparser import Parser
@@ -34,10 +35,8 @@ if args.get("HELP"):
 elif args.get("STATS"):
     p = Parser(args.get("STAT_NAME"))
     p.parse()
-    try:
-        os.mkdir("data/")
-    except FileExistsError:
-        pass
+    path = Path("data/")
+    path.mkdir(parents=True, exist_ok=True)
     with open("data/result.json", "w") as f:
         f.write(p.json_result)
     print("[+] Result in JSON format(additioanlly saved to data/result.json)")

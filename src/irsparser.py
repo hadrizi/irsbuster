@@ -1,9 +1,9 @@
 import requests
 import json
-import os
 
 from bs4 import BeautifulSoup
 
+from pathlib import Path
 from urllib.parse import urlunsplit, urlencode
 
 class Parser:
@@ -73,15 +73,8 @@ class Parser:
         self.parse()
         print(f"[~] Downloading PDFs for form {self.form_name} within range {min(years)}-{max(years)} to data/{self.form_name}/")
 
-        try:
-            os.mkdir(f"data/")
-        except FileExistsError:
-            pass
-
-        try:
-            os.mkdir(f"data/{self.form_name}/")
-        except FileExistsError:
-            pass
+        path = Path(f"data/{self.form_name}/")
+        path.mkdir(parents=True, exist_ok=True)
         
         count = 0
         for year in years:
