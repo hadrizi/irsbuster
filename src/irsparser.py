@@ -71,7 +71,7 @@ class Parser:
 
     def download(self, years):
         self.parse()
-        print(f"[~] Downloading PDFs for form {self.form_name} within range {min(years)}-{max(years)}")
+        print(f"[~] Downloading PDFs for form {self.form_name} within range {min(years)}-{max(years)} to data/{self.form_name}/")
 
         try:
             os.mkdir(f"data/{self.form_name}/")
@@ -86,6 +86,8 @@ class Parser:
                 count += 1
         if count:
             print(f"[+] {count} PDFs were saved to data/{self.form_name}/")
+            if(len(years) - count > 0):
+               print(f"[+] {len(years) - count} PDFs were not found. Probably because there are no entries for these years.") 
         else:
             print(f"[!] There was no PDFs within given range")
 

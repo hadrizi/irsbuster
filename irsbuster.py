@@ -1,8 +1,8 @@
 import os
 import sys
 
-from cli import CLI
-from irsparser import Parser
+from src.cli import CLI
+from src.irsparser import Parser
 
 USAGE = '''
 Simple IRS buster
