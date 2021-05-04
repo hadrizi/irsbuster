@@ -23,6 +23,7 @@ Examples:
     irsbuster.py stats --name "Form W-2"
     irsbuster.py stats --name "Form W-2, Form W-2VI, Form W-2CA, Publ 1"
     irsbuster.py stats --name "Form W-2,Form W-2VI,Form W-2CA,Publ 1"
+    irsbuster.py stats --name "Form W-2","Form W-2VI","Form W-2CA","Publ 1"
     irsbuster.py download --name "Form W-2" --range 2002-2013
 """
 from pathlib import Path
@@ -46,8 +47,8 @@ if arguments['stats']:
     for form in forms:
         p = Parser(form.strip())
         p.parse()
-    p.dump_json()
-    if p.json_result:
+    if p.results:
+        p.dump_json()
         path = Path("data/")
         path.mkdir(parents=True, exist_ok=True)
         with open("data/result.json", "w") as f:
