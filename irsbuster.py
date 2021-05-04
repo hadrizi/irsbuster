@@ -31,16 +31,16 @@ from pathlib import Path
 from docopt import docopt
 from src.irsparser import Parser
 
+arguments = docopt(__doc__, help=True)
+
 def sanitize_date_range(date_range_raw):
     date_range_raw = date_range_raw.strip().split('-')
     date_range_raw = [x for x in date_range_raw if x != ""]
     if not date_range_raw or len(date_range_raw) != 2 or (int(date_range_raw[0]) > int(date_range_raw[1])):
-        print(f"[!] Range was not valid. Passed {date_range_raw}. Should be `xxxx-yyyy`, where xxxx is less than yyyy.")
+        print(f"[!] Range was not valid. Passed {arguments.get('<range>')}. Should be `xxxx-yyyy`, where xxxx is less than yyyy.")
         exit()
     date_range = list(range(int(date_range_raw[0]), int(date_range_raw[1]) + 1))
     return date_range
-
-arguments = docopt(__doc__, help=True)
 
 if arguments['stats']:
     forms = arguments.get("<name>").split(",")
