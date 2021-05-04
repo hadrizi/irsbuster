@@ -47,12 +47,13 @@ if arguments['stats']:
         p = Parser(form.strip())
         p.parse()
     p.dump_json()
-    path = Path("data/")
-    path.mkdir(parents=True, exist_ok=True)
-    with open("data/result.json", "w") as f:
-        f.write(p.json_result)
-    print("[+] Result in JSON format(additioanlly saved to data/result.json)")
-    print(p.json_result)
+    if p.json_result:
+        path = Path("data/")
+        path.mkdir(parents=True, exist_ok=True)
+        with open("data/result.json", "w") as f:
+            f.write(p.json_result)
+        print("[+] Result in JSON format(additioanlly saved to data/result.json)")
+        print(p.json_result)
 elif arguments['download']:
     date_range = sanitize_date_range(arguments.get("<range>"))
     forms = arguments.get("<name>").split(",")
