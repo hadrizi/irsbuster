@@ -11,29 +11,28 @@ class Parser:
     url_path = "/app/picklist/list/priorFormPublication.html"
     netloc = "apps.irs.gov"
 
-    # for more info about url parameters see
-    # https://www.irs.gov/help/find-help
-    # and
-    # https://www.irs.gov/forms-pubs/features-of-the-file-listings-application
-    url_params = {
-        "resultsPerPage": 200,
-        "sortColumn": "sortOrder",
-        "indexOfFirstRow": 0,
-        "criteria": "formNumber",
-        "formNumber": "false",
-        "isDescending": "false"
-    }
-
     results = []
     links = {}
     json_result = ""
 
     def __init__(self, form_name, *args, **kwargs):
-        self.url_params["value"] = form_name
+        # for more info about url parameters see
+        # https://www.irs.gov/help/find-help
+        # and
+        # https://www.irs.gov/forms-pubs/features-of-the-file-listings-application
+        self.url_params = {
+            "resultsPerPage": 200,
+            "sortColumn": "sortOrder",
+            "indexOfFirstRow": 0,
+            "criteria": "formNumber",
+            "formNumber": "false",
+            "isDescending": "false",
+            "value": form_name
+        }
         self.form_name = self.url_params["value"]
         self.url = self._build_url()
 
-    def parse(self):
+    def parse(self):        
         print(f"[~] Looking for {self.form_name}")
 
         html_dict = self._get_page_dict()
@@ -62,11 +61,14 @@ class Parser:
                     years.append(int(form.find('td', class_="EndCellSpacer").text))
                     self.links[int(form.find('td', class_="EndCellSpacer").text)] = form.find("a", href=True)['href']
 
-        if not years and not title:
-            print("[!] Desired form was not found")
-            exit()
+        if not years or not title or not pages_count:
+            print(f"[!] {self.form_name} form was not found\n")
+            return
         self.results.append(self._build_form_data(title, years))
-        print(f"[+] Form data retrieved")
+        print(f"[+] {self.form_name} data retrieved\n")
+        self.json_result = json.dumps(self.results, indent=4, sort_keys=True)
+
+    def dump_json(self):
         self.json_result = json.dumps(self.results, indent=4, sort_keys=True)
 
     def download(self, years):
@@ -85,9 +87,11 @@ class Parser:
         if count:
             print(f"[+] {count} PDFs were saved to data/{self.form_name}/")
             if(len(years) - count > 0):
-               print(f"[+] {len(years) - count} PDFs were not found. Probably because there are no entries for these years.") 
+               print(f"[!] {len(years) - count} PDFs were not found. Probably because there are no entries for these years.\n")
+            else:
+                print("")
         else:
-            print(f"[!] There was no PDFs within given range")
+            print(f"[!] There was no PDFs within given range\n")
 
     def _build_form_data(self, title, years):
         return {
@@ -121,8 +125,7 @@ class Parser:
         and we should add 1 in that case.
         '''
         if not pagination_bottom:
-            print("[!] Desired form was not found")
-            exit()
+            return 0
         count = len(pagination_bottom[0].find_all("a"))
         if count == 0:
             count += 1
